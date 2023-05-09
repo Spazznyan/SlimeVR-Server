@@ -1,0 +1,390 @@
+/// This file contains all messages related to the RPC system. Unlike the data feed
+/// system, the RPC system is focused on providing a reliable RPC communication pattern.
+///
+/// It can be used either for sending commands to mutate state, or reliably sending
+/// evented updates of data that should be guaranteed to be observed, such as a user
+/// initiated button push.
+
+include "datatypes/datatypes.fbs";
+include "settings/model.fbs";
+
+namespace solarxr_protocol.rpc;
+
+
+union RpcMessage {
+    HeartbeatRequest,
+    HeartbeatResponse,
+    ResetRequest,
+    ResetResponse,
+    AssignTrackerRequest,
+    SettingsRequest,
+    SettingsResponse,
+    ChangeSettingsRequest,
+    ClearDriftCompensationRequest,
+    RecordBVHRequest,
+    RecordBVHStatus,
+    SkeletonConfigRequest,
+    ChangeSkeletonConfigRequest,
+    SkeletonResetAllRequest,
+    SkeletonConfigResponse,
+    OpenSerialRequest,
+    CloseSerialRequest,
+    SetWifiRequest,
+    SerialUpdateResponse,
+    AutoBoneProcessRequest,
+    AutoBoneProcessStatusResponse,
+    AutoBoneEpochResponse,
+    OverlayDisplayModeRequest,
+    OverlayDisplayModeChangeRequest,
+    OverlayDisplayModeResponse,
+    SerialTrackerRebootRequest,
+    SerialTrackerGetInfoRequest,
+    SerialTrackerFactoryResetRequest,
+    SerialDevicesRequest,
+    SerialDevicesResponse,
+    NewSerialDeviceResponse,
+    StartWifiProvisioningRequest,
+    StopWifiProvisioningRequest,
+    WifiProvisioningStatusResponse,
+    ServerInfosRequest,
+    ServerInfosResponse,
+    LegTweaksTmpChange,
+    LegTweaksTmpClear,
+
+}
+
+table RpcMessageHeader {
+    /// For a request, this identifies the request. For a response, this corresponds
+    /// to the request that it is responding to.
+    tx_id: solarxr_protocol.datatypes.TransactionId;
+    message: RpcMessage;
+}
+
+
+table HeartbeatRequest {}
+
+table HeartbeatResponse {}
+
+
+enum ResetType: uint8 {
+    Yaw,
+    Full,
+    /// Second pose for calibrating mounting rotation
+    Mounting,
+}
+
+
+enum ResetStatus: uint8 {
+    STARTED,
+    FINISHED,
+}
+
+table ResetRequest {
+    reset_type: ResetType;
+}
+table ResetResponse {
+    reset_type: ResetType;
+    status: ResetStatus;
+}
+
+
+
+table AssignTrackerRequest {
+    tracker_id: solarxr_protocol.datatypes.TrackerId;
+    body_position: solarxr_protocol.datatypes.BodyPart;
+    mounting_orientation: solarxr_protocol.datatypes.math.Quat;
+    display_name: string;
+    allow_drift_compensation: bool;
+}
+
+table ClearDriftCompensationRequest {}
+
+// ---- Settings ----
+
+table SettingsRequest {}
+
+table SettingsResponse {
+    steam_vr_trackers: SteamVRTrackersSetting;
+    filtering: FilteringSettings;
+    drift_compensation: DriftCompensationSettings;
+    osc_router: OSCRouterSettings;
+    vrc_osc: VRCOSCSettings;
+    vmc_osc: VMCOSCSettings;
+    model_settings: solarxr_protocol.rpc.settings.ModelSettings;
+    tap_detection_settings: TapDetectionSettings;
+}
+
+table ChangeSettingsRequest {
+    steam_vr_trackers: SteamVRTrackersSetting;
+    filtering: FilteringSettings;
+    drift_compensation: DriftCompensationSettings;
+    osc_router: OSCRouterSettings;
+    vrc_osc: VRCOSCSettings;
+    vmc_osc: VMCOSCSettings;
+    model_settings: solarxr_protocol.rpc.settings.ModelSettings;
+    tap_detection_settings: TapDetectionSettings;
+}
+
+table SteamVRTrackersSetting {
+    waist: bool;
+    chest: bool;
+    feet: bool;
+    knees: bool;
+    elbows: bool;
+    hands: bool;
+}
+
+table FilteringSettings {
+    type: solarxr_protocol.datatypes.FilteringType;
+    /// 0 to 1. A higher value results in more smoothing or prediction
+    amount: float32;
+}
+
+/// Settings related to IMU yaw drift compensation
+table DriftCompensationSettings {
+    enabled: bool;
+    /// 0 to 1. A higher value results in more yaw drift compensation
+    amount: float32;
+    /// Number of previous resets to take into account when calculating yaw drift
+    max_resets: uint16;
+}
+
+/// OSC router forwards messages it receives, to allow the usage of multiple OSC programs for the same app.
+table OSCRouterSettings {
+    osc_settings: OSCSettings;
+}
+
+/// OSC Settings specific to VRChat
+table VRCOSCSettings {
+    osc_settings: OSCSettings;
+    trackers: OSCTrackersSetting;
+}
+
+/// OSC Settings specific to VMC
+table VMCOSCSettings {
+    osc_settings: OSCSettings;
+    vrm_json: string;
+    anchor_hip: bool;
+}
+
+/// OSC Settings that are used in *any* osc application.
+table OSCSettings {
+    enabled: bool;
+    port_in: uint16;
+    port_out: uint16;
+    address: string;
+}
+
+table OSCTrackersSetting {
+    head: bool;
+    chest: bool;
+    waist: bool;
+    knees: bool;
+    feet: bool;
+    elbows: bool;
+    hands: bool;
+    accessory: bool;
+}
+
+table TapDetectionSettings {
+    full_reset_delay: float = null;
+    full_reset_enabled: bool = null;
+    full_reset_taps: uint8 = null;
+    yaw_reset_delay: float = null;
+    yaw_reset_enabled: bool = null;
+    yaw_reset_taps: uint8 = null;
+    mounting_reset_delay: float = null;
+    mounting_reset_enabled: bool = null;
+    mounting_reset_taps: uint8 = null;
+}
+
+table RecordBVHRequest {
+    stop: bool;
+}
+
+table RecordBVHStatus {
+    recording: bool;
+}
+
+
+enum SkeletonBone: uint8 {
+    NONE = 0,
+    HEAD = 1,
+    NECK = 2,
+    CHEST = 3,
+    CHEST_OFFSET = 4,
+    WAIST = 5,
+    HIP = 6,
+    HIP_OFFSET = 7,
+    HIPS_WIDTH = 8,
+    UPPER_LEG = 9,
+    LOWER_LEG = 10,
+    FOOT_LENGTH = 11,
+    FOOT_SHIFT = 12,
+    SKELETON_OFFSET = 13,
+    SHOULDERS_DISTANCE = 14,
+    SHOULDERS_WIDTH = 15,
+    UPPER_ARM = 16,
+    LOWER_ARM = 17,
+    HAND_Y = 18,
+    HAND_Z = 19,
+    ELBOW_OFFSET = 20,
+    ACCESSORY = 21,
+}
+
+table SkeletonPart {
+    bone: SkeletonBone;
+    value: float;
+}
+
+table SkeletonConfigRequest {}
+table SkeletonConfigResponse {
+    skeleton_parts: [SkeletonPart];
+}
+
+table SkeletonResetAllRequest {}
+
+table ChangeSkeletonConfigRequest {
+    bone: SkeletonBone;
+    value: float;
+}
+
+table SerialDevice {
+    port: string;
+    name: string;
+}
+table OpenSerialRequest {
+    /// Automaticaly pick the first serial device available
+    auto: bool;
+    port: string;
+}
+table CloseSerialRequest {}
+table SetWifiRequest (deprecated) {
+    ssid: string;
+    password: string;
+}
+table SerialUpdateResponse {
+    log: string;
+    closed: bool;
+}
+
+/// Reboots the tracker connected to the serial monitor
+table SerialTrackerRebootRequest {}
+
+/// Sends the GET INFO cmd to the current tracker on the serial monitor
+table SerialTrackerGetInfoRequest {}
+
+/// Sends the FRST cmd to the currently over the Serial Montior connected Tracker
+table SerialTrackerFactoryResetRequest {}
+
+table SerialDevicesRequest {}
+
+table SerialDevicesResponse {
+    devices: [SerialDevice];
+}
+
+
+table NewSerialDeviceResponse {
+    device: SerialDevice;
+}
+
+table StartWifiProvisioningRequest {
+    ssid: string;
+    password: string;
+    port: string;
+}
+
+table StopWifiProvisioningRequest {}
+
+enum WifiProvisioningStatus: uint8 {
+    NONE = 0,
+    SERIAL_INIT = 1,
+    PROVISIONING = 2,
+    CONNECTING = 3,
+    CONNECTION_ERROR = 4,
+    LOOKING_FOR_SERVER = 5,
+    COULD_NOT_FIND_SERVER = 6,
+    DONE = 7
+}
+
+table WifiProvisioningStatusResponse {
+    status: WifiProvisioningStatus;
+}
+
+enum AutoBoneProcessType: uint8 {
+    NONE = 0,
+    RECORD = 1,
+    SAVE = 2,
+    PROCESS = 3,
+    APPLY = 4
+}
+
+table AutoBoneProcessRequest {
+    process_type: AutoBoneProcessType;
+}
+
+table AutoBoneProcessStatusResponse {
+    process_type: AutoBoneProcessType;
+    message: string;
+    current: uint32;
+    total: uint32;
+    completed: bool;
+    success: bool;
+}
+
+table AutoBoneEpochResponse {
+    current_epoch: uint32;
+    total_epochs: uint32;
+    epoch_error: float32;
+    adjusted_skeleton_parts: [SkeletonPart];
+}
+
+// ---- Overlay ----
+
+/// Requests the current state of `OverlayDisplayModeResponse`.
+table OverlayDisplayModeRequest {}
+
+/// Changes the state of the overlay's display mode.
+table OverlayDisplayModeChangeRequest {
+    is_visible: bool = null;
+    is_mirrored: bool = null;
+}
+
+/// The current state of the overlay's display mode.
+table OverlayDisplayModeResponse {
+    is_visible: bool;
+    is_mirrored: bool;
+}
+
+/// Allows to ask generic infos about the server,
+/// like the local ip address, the version of the server, the java version,
+/// the current working dir and other informations we might want to show in the gui
+/// for information/debug purposes
+table ServerInfosRequest {}
+
+/// Holds the Server informations, this is a basic table holding various informations about the currently running server
+/// like its local ip address (usefull for standalone users so they can specify the ip of the server more easilly) and any more
+/// infos we might want to add in the future. (like java version, working dir, server version ....)
+/// This only holds the local ip for now. But there will be other informations added as we chose to display them on the gui for instance
+table ServerInfosResponse {
+    localIp: string;
+}
+
+// TODO: Should we extend this to more types of temp settings in the future?
+/// Makes a temporary change to legtweaks. This is not saved to disk, and can be
+/// cleared with `LegTweaksTmpClear`
+table LegTweaksTmpChange {
+  floor_clip: bool = null;
+  skating_correction: bool = null;
+  toe_snap: bool = null;
+  foot_plant: bool = null;
+}
+
+/// Clears the legtweaks temprorary state back to what the config has.
+/// Setting a field to `true` will reset that field.
+table LegTweaksTmpClear {
+  floor_clip: bool = false;
+  skating_correction: bool = false;
+  toe_snap: bool = false;
+  foot_plant: bool = false; 
+}
