@@ -31,6 +31,7 @@ enum class TrackerRole(val id: Int, val roleHint: String, val viveRole: String) 
 	HMD(19, "", ""),
 	BEACON(20, "", ""),
 	GENERIC_CONTROLLER(21, "vive_tracker_handed", "TrackerRole_Handed"),
+	ACCESSORY(22, "", ""),
 	;
 
 	companion object {
