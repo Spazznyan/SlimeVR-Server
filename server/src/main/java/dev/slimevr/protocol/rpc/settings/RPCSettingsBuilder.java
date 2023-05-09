@@ -64,7 +64,8 @@ public class RPCSettingsBuilder {
 				config.getOSCTrackerRole(TrackerRole.LEFT_ELBOW, false)
 					&& config.getOSCTrackerRole(TrackerRole.RIGHT_ELBOW, false),
 				config.getOSCTrackerRole(TrackerRole.LEFT_HAND, false)
-					&& config.getOSCTrackerRole(TrackerRole.RIGHT_HAND, false)
+					&& config.getOSCTrackerRole(TrackerRole.RIGHT_HAND, false),
+				config.getOSCTrackerRole(TrackerRole.ACCESSORY, false)
 			);
 		VRCOSCSettings.startVRCOSCSettings(fbb);
 		VRCOSCSettings.addOscSettings(fbb, generalSettingOffset);
