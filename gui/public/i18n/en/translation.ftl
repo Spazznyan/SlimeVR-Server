@@ -35,6 +35,7 @@ body_part-LEFT_HAND = Left hand
 body_part-LEFT_UPPER_LEG = Left thigh
 body_part-LEFT_LOWER_LEG = Left ankle
 body_part-LEFT_FOOT = Left foot
+body_part-ACCESSORY = Accessory
 
 ## Proportions
 skeleton_bone-NONE = None
@@ -61,6 +62,7 @@ skeleton_bone-LOWER_ARM = Lower Arm Length
 skeleton_bone-HAND_Y = Hand Distance Y
 skeleton_bone-HAND_Z = Hand Distance Z
 skeleton_bone-ELBOW_OFFSET = Elbow Offset
+skeleton_bone-ACCESSORY = Accessory
 
 ## Tracker reset buttons
 reset-reset_all = Reset all proportions
@@ -205,6 +207,7 @@ tracker_selection_menu-LEFT_UPPER_LEG = { -tracker_selection-part } left thigh?
 tracker_selection_menu-LEFT_LOWER_LEG = { -tracker_selection-part } left ankle?
 tracker_selection_menu-LEFT_FOOT = { -tracker_selection-part } left foot?
 tracker_selection_menu-LEFT_CONTROLLER = { -tracker_selection-part } left controller?
+tracker_selection_menu-ACCESSORY = { -tracker_selection-part } accessory?
 
 tracker_selection_menu-unassigned = Unassigned Trackers
 tracker_selection_menu-assigned = Assigned Trackers
@@ -415,6 +418,7 @@ settings-osc-vrchat-network-trackers-hip = Hip
 settings-osc-vrchat-network-trackers-knees = Knees
 settings-osc-vrchat-network-trackers-feet = Feet
 settings-osc-vrchat-network-trackers-elbows = Elbows
+settings-osc-vrchat-network-trackers-accessory = Accessory
 
 ## VMC OSC settings
 settings-osc-vmc = Virtual Motion Capture
