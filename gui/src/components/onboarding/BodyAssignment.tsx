@@ -26,6 +26,7 @@ export const ASSIGNMENT_RULES: Partial<
   [BodyPart.RIGHT_UPPER_LEG]: [SPINE_PARTS],
   [BodyPart.HIP]: [BodyPart.CHEST],
   [BodyPart.WAIST]: [BodyPart.CHEST],
+  [BodyPart.ACCESSORY]: [BodyPart.NONE],
 };
 
 export function BodyAssignment({
@@ -139,6 +140,18 @@ export function BodyAssignment({
                   td={trackerPartGrouped[BodyPart.LEFT_HAND]}
                   role={BodyPart.LEFT_HAND}
                   onClick={() => onRoleSelected(BodyPart.LEFT_HAND)}
+                  direction="right"
+                />
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              {advanced && (
+                <TrackerPartCard
+                  onlyAssigned={onlyAssigned}
+                  roleError={rolesWithErrors[BodyPart.ACCESSORY]?.label}
+                  td={trackerPartGrouped[BodyPart.ACCESSORY]}
+                  role={BodyPart.ACCESSORY}
+                  onClick={() => onRoleSelected(BodyPart.ACCESSORY)}
                   direction="right"
                 />
               )}
