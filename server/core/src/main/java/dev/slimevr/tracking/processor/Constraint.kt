@@ -190,17 +190,17 @@ class Constraint(
 		// Constraint function for a FINGER hinge constraint with min and max angles
 		private val fingerhingeConstraint: ConstraintFunction =
 			{ rotation: Quaternion, min: Float, max: Float, _: Float ->
-				val (_, hingeAxisRot) = decompose(rotation, Vector3.NEG_Z)
+				val (_, hingeAxisRot) = decompose(rotation, Vector3.Z)
 
-				constrain(hingeAxisRot, min, max, Vector3.NEG_Z)
+				constrain(hingeAxisRot, min, max, Vector3.Z)
 			}
 
 		// Constraint function for a FINGER hinge constraint with min and max angles that allows nonHingeDeviation
 		// rotation on all axis but the hinge
 		private val fingerlooseHingeConstraint: ConstraintFunction =
 			{ rotation: Quaternion, min: Float, max: Float, nonHingeDeviation: Float ->
-				var (nonHingeRot, hingeAxisRot) = decompose(rotation, Vector3.NEG_Z)
-				hingeAxisRot = constrain(hingeAxisRot, min, max, Vector3.NEG_Z)
+				var (nonHingeRot, hingeAxisRot) = decompose(rotation, Vector3.Z)
+				hingeAxisRot = constrain(hingeAxisRot, min, max, Vector3.Z)
 				nonHingeRot = constrain(nonHingeRot, nonHingeDeviation)
 
 				nonHingeRot * hingeAxisRot
