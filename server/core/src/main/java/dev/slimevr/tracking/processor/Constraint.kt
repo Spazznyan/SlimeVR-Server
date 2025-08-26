@@ -79,6 +79,8 @@ class Constraint(
 			TWIST_SWING,
 			HINGE,
 			LOOSE_HINGE,
+			FINGER_HINGE,
+			FINGER_LOOSE_HINGE,
 			COMPLETE,
 		}
 
@@ -88,6 +90,8 @@ class Constraint(
 				ConstraintType.TWIST_SWING -> twistSwingConstraint
 				ConstraintType.HINGE -> hingeConstraint
 				ConstraintType.LOOSE_HINGE -> looseHingeConstraint
+				ConstraintType.FINGER_HINGE -> fingerhingeConstraint
+				ConstraintType.FINGER_LOOSE_HINGE -> fingerlooseHingeConstraint
 			}
 
 		private fun getLocalRotation(rotation: Quaternion, thisBone: Bone): Quaternion {
@@ -178,6 +182,25 @@ class Constraint(
 			{ rotation: Quaternion, min: Float, max: Float, nonHingeDeviation: Float ->
 				var (nonHingeRot, hingeAxisRot) = decompose(rotation, Vector3.NEG_X)
 				hingeAxisRot = constrain(hingeAxisRot, min, max, Vector3.NEG_X)
+				nonHingeRot = constrain(nonHingeRot, nonHingeDeviation)
+
+				nonHingeRot * hingeAxisRot
+			}
+
+		// Constraint function for a FINGER hinge constraint with min and max angles
+		private val fingerhingeConstraint: ConstraintFunction =
+			{ rotation: Quaternion, min: Float, max: Float, _: Float ->
+				val (_, hingeAxisRot) = decompose(rotation, Vector3.NEG_Y)
+
+				constrain(hingeAxisRot, min, max, Vector3.NEG_Y)
+			}
+
+		// Constraint function for a FINGER hinge constraint with min and max angles that allows nonHingeDeviation
+		// rotation on all axis but the hinge
+		private val fingerlooseHingeConstraint: ConstraintFunction =
+			{ rotation: Quaternion, min: Float, max: Float, nonHingeDeviation: Float ->
+				var (nonHingeRot, hingeAxisRot) = decompose(rotation, Vector3.NEG_Y)
+				hingeAxisRot = constrain(hingeAxisRot, min, max, Vector3.NEG_Y)
 				nonHingeRot = constrain(nonHingeRot, nonHingeDeviation)
 
 				nonHingeRot * hingeAxisRot
