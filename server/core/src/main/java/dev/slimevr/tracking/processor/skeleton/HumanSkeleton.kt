@@ -72,7 +72,7 @@ class HumanSkeleton(
 	val leftThumbProximalBone = Bone(BoneType.LEFT_THUMB_PROXIMAL, Constraint(ConstraintType.COMPLETE))
 	val leftThumbDistalBone = Bone(BoneType.LEFT_THUMB_DISTAL, Constraint(ConstraintType.COMPLETE))
 	val leftIndexProximalBone = Bone(BoneType.LEFT_INDEX_PROXIMAL, Constraint(ConstraintType.LOOSE_HINGE, -30f, 90f, 20f))
-	val leftIndexIntermediateBone = Bone(BoneType.LEFT_INDEX_INTERMEDIATE, Constrain(ConstraintType.LOOSE_HINGE, -10f, 105f, 0f))
+	val leftIndexIntermediateBone = Bone(BoneType.LEFT_INDEX_INTERMEDIATE, Constraint(ConstraintType.LOOSE_HINGE, -10f, 105f, 0f))
 	val leftIndexDistalBone = Bone(BoneType.LEFT_INDEX_DISTAL, Constraint(ConstraintType.LOOSE_HINGE, -10f, 80f, 0f))
 	val leftMiddleProximalBone = Bone(BoneType.LEFT_MIDDLE_PROXIMAL, Constraint(ConstraintType.LOOSE_HINGE, -30f, 90f, 20f))
 	val leftMiddleIntermediateBone = Bone(BoneType.LEFT_MIDDLE_INTERMEDIATE, Constraint(ConstraintType.LOOSE_HINGE, -10f, 105f, 0f))
