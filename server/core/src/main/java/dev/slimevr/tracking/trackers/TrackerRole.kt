@@ -37,6 +37,8 @@ enum class TrackerRole(val id: Int, val roleHint: String, val viveRole: String) 
 	RIGHT_TOES_ABDUCTOR_HALLUCIS(25, "vive_tracker_right_toes_abductor_hallucis", "TrackerRole_Right_Toes_Abductor_Hallucis"),
 	RIGHT_TOES_DIGITORUM_BREVIS(26, "vive_tracker_right_toes_digitorum_brevis", "TrackerRole_Right_Toes_Digitorum_Brevis"),
 	RIGHT_TOES_ABDUCTOR_DIGITI_MINIMI(27, "vive_tracker_right_toes_abductor_digiti_minimi", "TrackerRole_Right_Toes_Abductor_Digiti_Minimi"),
+	LEFT_TOES(2, "vive_tracker_left_toes", "TrackerRole_LeftToes"),
+	RIGHT_TOES(3, "vive_tracker_right_toes", "TrackerRole_RightToes"),
 	;
 
 	companion object {

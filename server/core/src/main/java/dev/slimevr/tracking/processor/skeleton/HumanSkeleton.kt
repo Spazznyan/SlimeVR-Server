@@ -118,6 +118,8 @@ class HumanSkeleton(
 	val rightKneeTrackerBone = Bone(BoneType.RIGHT_KNEE_TRACKER, Constraint(ConstraintType.COMPLETE))
 	val leftFootTrackerBone = Bone(BoneType.LEFT_FOOT_TRACKER, Constraint(ConstraintType.COMPLETE))
 	val rightFootTrackerBone = Bone(BoneType.RIGHT_FOOT_TRACKER, Constraint(ConstraintType.COMPLETE))
+	val leftToesTrackerBone = Bone(BoneType.LEFT_TOES_TRACKER, Constraint(ConstraintType.COMPLETE))
+	val rightToesTrackerBone = Bone(BoneType.RIGHT_TOES_TRACKER, Constraint(ConstraintType.COMPLETE))
 	val leftElbowTrackerBone = Bone(BoneType.LEFT_ELBOW_TRACKER, Constraint(ConstraintType.COMPLETE))
 	val rightElbowTrackerBone = Bone(BoneType.RIGHT_ELBOW_TRACKER, Constraint(ConstraintType.COMPLETE))
 	val leftHandTrackerBone = Bone(BoneType.LEFT_HAND_TRACKER, Constraint(ConstraintType.COMPLETE))
@@ -215,7 +217,7 @@ class HumanSkeleton(
 	var computedRightHandTracker: Tracker? = null
 
 	var computedLeftToesTracker: Tracker? = null
-	var computedLeftToesTracker: Tracker? = null
+	var computedRightToesTracker: Tracker? = null
 	var computedLeftAbductorHallucisTracker: Tracker? = null
 	var computedLeftDigitorumBrevisTracker: Tracker? = null
 	var computedLeftAbductorDigitiMinimiTracker: Tracker? = null
@@ -246,6 +248,7 @@ class HumanSkeleton(
 	// Modules
 	var legTweaks = LegTweaks(this)
 	var tapDetectionManager: TapDetectionManager? = null
+	var viveEmulation = ViveEmulation(this)
 	var localizer = Localizer(this)
 	var ikSolver = IKSolver(headBone)
 	var userHeightCalibration: UserHeightCalibration? = null
@@ -317,6 +320,8 @@ class HumanSkeleton(
 		rightUpperLegBone.attachChild(rightKneeTrackerBone)
 		leftFootBone.attachChild(leftFootTrackerBone)
 		rightFootBone.attachChild(rightFootTrackerBone)
+		leftFootBone.attachChild(leftToesTrackerBone);
+		rightFootBone.attachChild(rightToesTrackerBone);
 
 		// Attach toe bones
 		leftFootBone.attachChild(leftToesBone);
@@ -430,6 +435,7 @@ class HumanSkeleton(
 		leftUpperLegTracker = getTrackerForSkeleton(trackers, TrackerPosition.LEFT_UPPER_LEG)
 		leftLowerLegTracker = getTrackerForSkeleton(trackers, TrackerPosition.LEFT_LOWER_LEG)
 		leftFootTracker = getTrackerForSkeleton(trackers, TrackerPosition.LEFT_FOOT)
+		leftToesTracker = getTrackerForSkeleton(trackers, TrackerPosition.LEFT_TOES)
 		leftAbductorHallucisTracker = getTrackerForSkeleton(trackers, TrackerPosition.LEFT_TOES_ABDUCTOR_HALLUCIS)
 		leftDigitorumBrevisTracker = getTrackerForSkeleton(trackers, TrackerPosition.LEFT_TOES_DIGITORUM_BREVIS)
 		leftAbductorDigitiMinimiTracker = getTrackerForSkeleton(trackers, TrackerPosition.LEFT_TOES_ABDUCTOR_DIGITI_MINIMI)
@@ -437,6 +443,7 @@ class HumanSkeleton(
 		rightUpperLegTracker = getTrackerForSkeleton(trackers, TrackerPosition.RIGHT_UPPER_LEG)
 		rightLowerLegTracker = getTrackerForSkeleton(trackers, TrackerPosition.RIGHT_LOWER_LEG)
 		rightFootTracker = getTrackerForSkeleton(trackers, TrackerPosition.RIGHT_FOOT)
+		rightToesTracker = getTrackerForSkeleton(trackers, TrackerPosition.RIGHT_TOES)
 		rightAbductorHallucisTracker = getTrackerForSkeleton(trackers, TrackerPosition.RIGHT_TOES_ABDUCTOR_HALLUCIS)
 		rightDigitorumBrevisTracker = getTrackerForSkeleton(trackers, TrackerPosition.RIGHT_TOES_DIGITORUM_BREVIS)
 		rightAbductorDigitiMinimiTracker = getTrackerForSkeleton(trackers, TrackerPosition.RIGHT_TOES_ABDUCTOR_DIGITI_MINIMI)
@@ -488,6 +495,8 @@ class HumanSkeleton(
 		hasKneeTrackers = leftUpperLegTracker != null && rightUpperLegTracker != null
 		hasLeftArmTracker = leftLowerArmTracker != null || leftUpperArmTracker != null
 		hasRightArmTracker = rightLowerArmTracker != null || rightUpperArmTracker != null
+		// hasLeftToesTracker = leftToesTracker != null
+		// hasRightToesTracker = rightToesTracker != null
 		hasLeftFingerTracker = leftThumbMetacarpalTracker != null ||
 			leftThumbProximalTracker != null ||
 			leftThumbDistalTracker != null ||
@@ -586,10 +595,10 @@ class HumanSkeleton(
 		TrackerRole.WAIST -> computedHipTracker!!
 		TrackerRole.LEFT_KNEE -> computedLeftKneeTracker!!
 		TrackerRole.LEFT_FOOT -> computedLeftFootTracker!!
-		TrackerRole.LEFT_TOES -> computedLeftToeTracker!!
+		TrackerRole.LEFT_TOES -> computedLeftToesTracker!!
 		TrackerRole.RIGHT_KNEE -> computedRightKneeTracker!!
 		TrackerRole.RIGHT_FOOT -> computedRightFootTracker!!
-		TrackerRole.LEFT_TOES -> computedLeftToeTracker!!
+		TrackerRole.RIGHT_TOES -> computedRightToesTracker!!
 		TrackerRole.LEFT_ELBOW -> computedLeftElbowTracker!!
 		TrackerRole.RIGHT_ELBOW -> computedRightElbowTracker!!
 		TrackerRole.LEFT_HAND -> computedLeftHandTracker!!
@@ -628,6 +637,7 @@ class HumanSkeleton(
 
 		legTweaks.tweakLegs()
 		localizer.update()
+		viveEmulation.update()
 	}
 
 	/**
@@ -1025,6 +1035,8 @@ class HumanSkeleton(
 		lowerLegBone: Bone,
 		footBone: Bone,
 		footTrackerBone: Bone,
+		toesBone: Bone,
+		toesTrackerBone: Bone,
 		abductorHallucisBone: Bone,
 		abductorHallucisTrackerBone: Bone,
 		digitorumBrevisBone: Bone,
@@ -1330,6 +1342,8 @@ class HumanSkeleton(
 
 			SkeletonConfigToggles.USE_POSITION -> ikSolver.enabled = newValue
 
+			SkeletonConfigToggles.VIVE_EMULATION -> viveEmulation.enabled = newValue
+
 			SkeletonConfigToggles.ENFORCE_CONSTRAINTS -> enforceConstraints = newValue
 
 			SkeletonConfigToggles.CORRECT_CONSTRAINTS -> correctConstraints = newValue
@@ -1417,6 +1431,8 @@ class HumanSkeleton(
 		BoneType.RIGHT_TOES -> rightToesBone
 		BoneType.LEFT_FOOT_TRACKER -> leftFootTrackerBone
 		BoneType.RIGHT_FOOT_TRACKER -> rightFootTrackerBone
+		BoneType.LEFT_TOES_TRACKER -> leftToesTrackerBone
+		BoneType.RIGHT_TOES_TRACKER -> rightToesTrackerBone
 		BoneType.LEFT_UPPER_SHOULDER -> leftUpperShoulderBone
 		BoneType.RIGHT_UPPER_SHOULDER -> rightUpperShoulderBone
 		BoneType.LEFT_SHOULDER -> leftShoulderBone

@@ -180,12 +180,6 @@ enum class UnityBone(
 	@SerialName("rightLittleDistal")
 	RIGHT_LITTLE_DISTAL("RightLittleDistal", BoneType.RIGHT_LITTLE_DISTAL, TrackerPosition.RIGHT_LITTLE_DISTAL),
 
-	@SerialName("leftToes")
-	LEFT_TOES("LeftToes", null, null),
-
-	@SerialName("rightToes")
-	RIGHT_TOES("RightToes", null, null),
-
 	LAST_BONE("LastBone", null, null),
 	;
 

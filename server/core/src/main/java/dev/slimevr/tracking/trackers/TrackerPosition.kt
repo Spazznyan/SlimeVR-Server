@@ -180,6 +180,8 @@ enum class TrackerPosition(
 	RIGHT_TOES_ABDUCTOR_HALLUCIS("body:right_toes_abductor_hallucis", TrackerRole.RIGHT_TOES_ABDUCTOR_HALLUCIS, BodyPart.RIGHT_TOES_ABDUCTOR_HALLUCIS, 54),
 	RIGHT_TOES_DIGITORUM_BREVIS("body:right_toes_digitorum_brevis", TrackerRole.RIGHT_TOES_DIGITORUM_BREVIS, BodyPart.RIGHT_TOES_DIGITORUM_BREVIS, 55),
 	RIGHT_TOES_ABDUCTOR_DIGITI_MINIMI("body:right_toes_abductor_digiti_minimi", TrackerRole.RIGHT_TOES_ABDUCTOR_DIGITI_MINIMI, BodyPart.RIGHT_TOES_ABDUCTOR_DIGITI_MINIMI, 56),
+	LEFT_TOES("body:left_toes", TrackerRole.LEFT_TOES, BodyPart.LEFT_TOES, 57),
+	RIGHT_TOES("body:right_toes", TrackerRole.RIGHT_TOES, BodyPart.RIGHT_TOES, 58),
 	;
 
 	/**
