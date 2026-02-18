@@ -395,6 +395,8 @@ class VMCHandler(
 						if (unityBone.boneType != null &&
 							(!UnityBone.isLeftFingerBone(unityBone) || humanPoseManager.skeleton.hasLeftFingerTracker || (mirrorTracking && humanPoseManager.skeleton.hasRightFingerTracker)) &&
 							(!UnityBone.isRightFingerBone(unityBone) || humanPoseManager.skeleton.hasRightFingerTracker || (mirrorTracking && humanPoseManager.skeleton.hasLeftFingerTracker)) &&
+						//	(!UnityBone.isLeftToesBone(unityBone) || humanPoseManager.skeleton.hasLeftToeTracker || (mirrorTracking && humanPoseManager.skeleton.hasRightToeTracker)) &&
+						//	(!UnityBone.isRightToesBone(unityBone) || humanPoseManager.skeleton.hasRightToeTracker || (mirrorTracking && humanPoseManager.skeleton.hasLeftToeTracker)) &&
 							!(humanPoseManager.isTrackingLeftArmFromController && (UnityBone.isLeftArmBone(unityBone) || unityBone == UnityBone.LEFT_SHOULDER)) &&
 							!(humanPoseManager.isTrackingRightArmFromController && (UnityBone.isRightArmBone(unityBone) || unityBone == UnityBone.RIGHT_SHOULDER))
 						) {
