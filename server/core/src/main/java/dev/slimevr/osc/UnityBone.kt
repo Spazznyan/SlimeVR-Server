@@ -75,6 +75,12 @@ enum class UnityBone(
 	@SerialName("rightHand")
 	RIGHT_HAND("RightHand", BoneType.RIGHT_HAND, TrackerPosition.RIGHT_HAND),
 
+	@SerialName("leftToes")
+	LEFT_TOES("LeftToes", BoneType.LEFT_TOES, TrackerPosition.LEFT_TOES),
+
+	@SerialName("rightToes")
+	RIGHT_TOES("RightToes", BoneType.RIGHT_TOES, TrackerPosition.RIGHT_TOES),
+
 	@SerialName("leftEye")
 	LEFT_EYE("LeftEye", null, null),
 
@@ -342,5 +348,15 @@ enum class UnityBone(
 			bone == RIGHT_LITTLE_PROXIMAL ||
 			bone == RIGHT_LITTLE_INTERMEDIATE ||
 			bone == RIGHT_LITTLE_DISTAL
+
+		/**
+		 * Returns true if the bone part of the right toes
+		 */
+		fun isRightToesBone(bone: UnityBone): Boolean = bone == RIGHT_TOES
+
+		/**
+		 * Returns true if the bone part of the left toes
+		 */
+		fun isLeftToesBone(bone: UnityBone): Boolean = bone == LEFT_TOES
 	}
 }

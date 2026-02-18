@@ -34,6 +34,10 @@ class UnityArmature(localRot: Boolean) {
 	private val rightAnkleNode = TransformNode(localRotation = localRot)
 	private val rightFootNode = TransformNode(localRotation = localRot)
 
+	// Toes
+	private val leftToesNode = TransformNode(localRotation = localRot)
+	private val rightToesNode = TransformNode(localRotation = localRot)
+
 	// Arms
 	private val leftShoulderHeadNode = TransformNode(localRotation = localRot)
 	private val rightShoulderHeadNode = TransformNode(localRotation = localRot)
@@ -111,6 +115,10 @@ class UnityArmature(localRot: Boolean) {
 		rightKneeNode.attachChild(rightAnkleNode)
 		leftAnkleNode.attachChild(leftFootNode)
 		rightAnkleNode.attachChild(rightFootNode)
+
+		// Toes (TODO: expand implimentation to multiple toes)
+		leftFootNode.attachChild(leftToesNode)
+		rightFootNode.attachChild(rightToesNode)
 
 		// Arms
 		upperChestNode.attachChild(leftShoulderHeadNode)
@@ -283,6 +291,8 @@ class UnityArmature(localRot: Boolean) {
 			UnityBone.RIGHT_LOWER_LEG -> rightKneeNode
 			UnityBone.LEFT_FOOT -> leftAnkleNode
 			UnityBone.RIGHT_FOOT -> rightAnkleNode
+			UnityBone.LEFT_TOES -> leftFootNode
+			UnityBone.RIGHT_TOES -> rightFootNode
 			UnityBone.LEFT_SHOULDER -> leftShoulderHeadNode
 			UnityBone.RIGHT_SHOULDER -> rightShoulderHeadNode
 			UnityBone.LEFT_UPPER_ARM -> leftShoulderTailNode
